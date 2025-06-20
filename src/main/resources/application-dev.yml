@@ -1,0 +1,14 @@
+cors:
+  allowed-origins: "http://localhost:5173"  # 开发环境前端域名
+
+logging:
+  level:
+    # 设置你的Mapper接口包路径为DEBUG
+    com.liuao.game_card_sell.mapper: DEBUG
+
+    # 关键：启用MyBatis的SQL日志
+    org.mybatis.spring.SqlSessionUtils: INFO
+    org.mybatis.spring.transaction.SpringManagedTransaction: INFO
+    org.apache.ibatis: DEBUG
+    java.sql.Connection: DEBUG
+    java.sql.PreparedStatement: DEBUG

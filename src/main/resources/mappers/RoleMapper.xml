@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuao.game_card_sell.mapper.RoleMapper">
+
+    <select id="selectByName" resultType="com.liuao.game_card_sell.entity.Role">
+        SELECT * FROM role WHERE name = #{name}
+    </select>
+
+    <select id="selectRolesByIds" resultType="com.liuao.game_card_sell.entity.Role">
+        SELECT * FROM role
+        WHERE id IN
+        <foreach collection="list" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+</mapper>

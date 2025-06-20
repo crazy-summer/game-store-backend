@@ -1,0 +1,2 @@
+cors:
+  allowed-origins: "https://your-prod-domain.com"  # 生产环境前端域名

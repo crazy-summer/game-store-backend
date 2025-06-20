@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuao.game_card_sell.mapper.CartridgePlatformRelationMapper">
+    <select id="selectRelationByCartridgeId"
+            resultType="com.liuao.game_card_sell.entity.CartridgePlatformRelation">
+        select * from cartridge_platform_relation where cartridge_id = #{cartridgeId}
+    </select>
+</mapper>

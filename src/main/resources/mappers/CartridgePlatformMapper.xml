@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuao.game_card_sell.mapper.CartridgePlatformMapper">
+    <insert id="addRelation">
+        insert into cartridge_platform_relation (cartridge_id, platform_id)
+        values
+        <foreach collection="platformIds" item="platformId" separator=",">
+            (#{id}, #{platformId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByCartridgeId">
+        delete from cartridge_platform_relation where cartridge_id = #{id}
+    </delete>
+
+    <select id="selectCartridgePlatforms" resultType="com.liuao.game_card_sell.entity.CartridgePlatform">
+        select * from cartridge_platform_dict
+    </select>
+    <select id="selectCartridgePlatformDictByIds"
+            resultType="com.liuao.game_card_sell.entity.CartridgePlatform">
+        select * from cartridge_platform_dict where id in
+            <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+    </select>
+</mapper>

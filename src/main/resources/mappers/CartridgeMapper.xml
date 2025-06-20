@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuao.game_card_sell.mapper.CartridgeMapper">
+    <select id="selectCartridges" resultMap="CartridgeMap">
+        select
+            ctg.*,
+            group_concat(distinct CONCAT(cpd.id, ':', cpd.platform_name)) as platforms,
+            group_concat(distinct CONCAT(ccd.id, ':', ccd.category_name)) as categories
+        from cartridge ctg
+        left join cartridge_platform_relation cpr on ctg.id = cpr.cartridge_id
+        left join cartridge_platform_dict cpd on cpr.platform_id = cpd.id
+
+        left join cartridge_category_relation ccr on ctg.id = ccr.cartridge_id
+        left join cartridge_category_dict ccd on ccr.category_id = ccd.id
+
+        left join user_cartridge_relation ucr on ctg.id = ucr.cartridge_id
+            and #{userId} = ucr.user_id
+        where 1=1
+            <if test="searchText != null and searchText != ''">
+                <bind name="pattern" value="'%' + searchText + '%'" />
+                and ctg.title like #{pattern}
+            </if>
+            <if test="platformNames != null and platformNames.size() > 0">
+               and exists (select 1
+                           from cartridge_platform_relation cpr2 left join cartridge_platform_dict cpd2 on cpr2.platform_id = cpd2.id and ctg.id = cpr2.cartridge_id
+                               where cpd2.platform_name in
+                   <foreach collection="platformNames" item = "platformName" open="(" separator="," close=")">
+                       #{platformName}
+                   </foreach> )
+            </if>
+            <if test="categoryNames != null and categoryNames.size() > 0">
+                and exists(select 1
+                           from cartridge_category_relation ccr2 left join cartridge_category_dict ccd2 on ccr2.cartridge_id = ccd2.id and ctg.id= ccr2.cartridge_id
+                            where ccd2.category_name in
+                    <foreach collection="categoryNames" item="categoryName" open="(" separator="," close=")">
+                        #{categoryName}
+                    </foreach> )
+            </if>
+
+            <if test="cursorId != null">
+                <choose>
+                    <when test="sortField != 'id'">
+                        and (
+                            ctg.${sortField} <include refid="getDirection"/> (select ${sortField} from cartridge where id = #{cursorId})
+                            or (ctg.${sortField} = (select ${sortField} from cartridge where id = #{cursorId})
+                                and ctg.id <include refid="getDirection"/> #{cursorId})
+                        )
+                    </when>
+                    <otherwise>
+                        and ctg.id <include refid="getDirection"/> #{cursorId}
+                    </otherwise>
+                </choose>
+            </if>
+        group by ctg.id
+        order by
+        <choose>
+            <when test="sortField != 'id'">
+                ctg.${sortField} ${sortDirection},
+                ctg.id ${sortDirection}  <!-- 确保排序唯一性 -->
+            </when>
+            <otherwise>
+                ctg.id ${sortDirection}
+            </otherwise>
+        </choose>
+
+        limit #{pageSize}
+    </select>
+
+    <sql id="getDirection">
+        <choose>
+            <when test="sortDirection == 'ASC'">
+                &gt;
+            </when>
+            <otherwise>
+                &lt;
+            </otherwise>
+        </choose>
+    </sql>
+
+    <resultMap id="CartridgeMap" type="com.liuao.game_card_sell.entity.Cartridge">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="cartridgeCategories" column="categories" typeHandler="com.liuao.game_card_sell.handler.CartridgeCategoryTypeHandler"/>
+        <result property="cartridgePlatforms" column="platforms" typeHandler="com.liuao.game_card_sell.handler.CartridgePlatformTypeHandler"/>
+        <result property="score" column="score"/>
+        <result property="coverImagePath" column="cover_image_path"/>
+        <result property="coverImageUrl" column="cover_image_url"/>
+        <result property="price" column="price"/>
+        <result property="releaseDate" column="release_date"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="selectCartridgeById" resultType="com.liuao.game_card_sell.entity.Cartridge">
+        select * from cartridge where id = #{id}
+    </select>
+
+    <update id="updateCartridgeById">
+        update cartridge set
+            cover_image_url = #{request.coverImageUrl},
+            price = #{request.price},
+            release_date = #{request.releaseDate},
+            score = #{request.score},
+            title = #{request.title}
+        where id = #{id}
+    </update>
+</mapper>
