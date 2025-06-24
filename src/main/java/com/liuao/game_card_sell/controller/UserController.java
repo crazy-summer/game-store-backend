@@ -1,5 +1,6 @@
 package com.liuao.game_card_sell.controller;
 
+import com.liuao.game_card_sell.dto.ApiResponse;
 import com.liuao.game_card_sell.dto.PageInfo;
 import com.liuao.game_card_sell.dto.PageRequest;
 import com.liuao.game_card_sell.entity.User;
@@ -48,12 +49,12 @@ public class UserController {
     }
 
     // 更新用户
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseResult<Integer> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ApiResponse<Integer> updateUser(@PathVariable Long id, @RequestBody User user) {
         user.setId(id);
         int result = customUserDetailsService.updateUser(user);
-        return result > 0 ? ResponseResult.success(result) : ResponseResult.error("更新失败");
+        return result > 0 ? ApiResponse.success(result) : ApiResponse.error(400, "更新失败");
     }
 
     // 删除用户

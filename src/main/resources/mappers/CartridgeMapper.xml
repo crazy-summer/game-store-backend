@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.liuao.game_card_sell.mapper.CartridgeMapper">
-    <select id="selectCartridges" resultMap="CartridgeMap">
+    <select id="selectCartridges" resultMap="CartridgePlusMap">
         select
             ctg.*,
             group_concat(distinct CONCAT(cpd.id, ':', cpd.platform_name)) as platforms,
-            group_concat(distinct CONCAT(ccd.id, ':', ccd.category_name)) as categories
+            group_concat(distinct CONCAT(ccd.id, ':', ccd.category_name)) as categories,
+            IFNULL(ucr.is_favorite, false) as is_favorite,
+            IFNULL(ucr.is_played, false) as is_played,
+            IFNULL(ucr.is_wish_list, false) as is_wish_list
         from cartridge ctg
         left join cartridge_platform_relation cpr on ctg.id = cpr.cartridge_id
         left join cartridge_platform_dict cpd on cpr.platform_id = cpd.id
@@ -30,11 +33,43 @@
             </if>
             <if test="categoryNames != null and categoryNames.size() > 0">
                 and exists(select 1
-                           from cartridge_category_relation ccr2 left join cartridge_category_dict ccd2 on ccr2.cartridge_id = ccd2.id and ctg.id= ccr2.cartridge_id
+                           from cartridge_category_relation ccr2 left join cartridge_category_dict ccd2 on ccr2.category_id = ccd2.id and ctg.id= ccr2.cartridge_id
                             where ccd2.category_name in
                     <foreach collection="categoryNames" item="categoryName" open="(" separator="," close=")">
                         #{categoryName}
                     </foreach> )
+            </if>
+
+            <!-- 添加状态筛选条件 -->
+            <if test="isFavorite != null">
+                <choose>
+                    <when test="isFavorite == true">
+                        and ucr.is_favorite = 1  <!-- 只返回明确收藏的 -->
+                    </when>
+                    <otherwise>
+                        and (ucr.is_favorite = 0 or ucr.is_favorite is null)  <!-- 返回未收藏或无关系的 -->
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="isPlayed != null">
+                <choose>
+                    <when test="isPlayed == true">
+                        and ucr.is_played = 1  <!-- 只返回明确玩过的 -->
+                    </when>
+                    <otherwise>
+                        and (ucr.is_played = 0 or ucr.is_played is null)  <!-- 返回未玩过或无关系的 -->
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="isWishList != null">
+                <choose>
+                    <when test="isWishList == true">
+                        and ucr.is_wish_list = 1  <!-- 只返回明确想玩的 -->
+                    </when>
+                    <otherwise>
+                        and (ucr.is_wish_list = 0 or ucr.is_wish_list is null)  <!-- 返回不想玩或无关系的 -->
+                    </otherwise>
+                </choose>
             </if>
 
             <if test="cursorId != null">
@@ -77,7 +112,7 @@
         </choose>
     </sql>
 
-    <resultMap id="CartridgeMap" type="com.liuao.game_card_sell.entity.Cartridge">
+    <resultMap id="CartridgePlusMap" type="com.liuao.game_card_sell.dto.response.CartridgePlus">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="cartridgeCategories" column="categories" typeHandler="com.liuao.game_card_sell.handler.CartridgeCategoryTypeHandler"/>
@@ -88,6 +123,9 @@
         <result property="price" column="price"/>
         <result property="releaseDate" column="release_date"/>
         <result property="createTime" column="create_time"/>
+        <result property="isFavorite" column="is_favorite"/>
+        <result property="isPlayed" column="is_played"/>
+        <result property="isWishList" column="is_wish_list"/>
     </resultMap>
 
     <select id="selectCartridgeById" resultType="com.liuao.game_card_sell.entity.Cartridge">

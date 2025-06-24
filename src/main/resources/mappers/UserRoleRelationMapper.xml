@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuao.game_card_sell.mapper.UserRoleRelationMapper">
+    <insert id="addRelation">
+        insert into user_role (user_id, role_id)
+            values
+        <foreach collection="userRoles" item="userRole"  separator=",">
+            (#{userRole.userId}, #{userRole.roleId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByUserId">
+        delete from user_role where user_id = #{userId}
+    </delete>
+</mapper>

@@ -12,4 +12,6 @@ public interface RoleMapper{
     Role selectByName(@Param("name") String name);
 
     List<Role> selectRolesByIds(List<Long> roleIds);
+
+    List<Role> selectRoles();
 }

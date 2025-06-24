@@ -36,4 +36,6 @@ public interface UserMapper {
     List<User> selectPageWithRoles(@Param("offset") int offset, @Param("limit") int limit);
 
     int selectUserWithRolesCount();
+
+    int updateUser(User user);
 }

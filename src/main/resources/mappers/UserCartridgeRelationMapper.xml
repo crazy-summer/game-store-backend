@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuao.game_card_sell.mapper.UserCartridgeRelationMapper">
+    <insert id="upsert" parameterType="com.liuao.game_card_sell.entity.UserCartridgeRelation">
+        INSERT INTO user_cartridge_relation (
+            user_id, cartridge_id, is_favorite, is_wishlist, is_played, create_time, update_time
+        ) VALUES (
+            #{request.userId}, #{request.cartridgeId}, #{request.isFavorite}, #{request.isWishlist}, #{request.isPlayed}, NOW(), NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            is_favorite = VALUES(is_favorite),
+            is_wishlist = VALUES(is_wishlist),
+            is_played = VALUES(is_played),
+            update_time = NOW()
+    </insert>
+
+    <select id="selectUserCartridgeRelation"
+            resultType="com.liuao.game_card_sell.entity.UserCartridgeRelation">
+        select * from user_cartridge_relation where user_id = #{userId} and cartridge_id = #{cartridgeId}
+    </select>
+</mapper>

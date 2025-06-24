@@ -13,6 +13,10 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
+    <update id="updateUser">
+        update user set username = #{username}, email = #{email}, phone = #{phone},enabled_status=#{enabledStatus}
+        where id = #{id}
+    </update>
 
     <select id="selectByUsername" resultType="com.liuao.game_card_sell.entity.User">
         SELECT * FROM user WHERE username = #{username}

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class CartridgeResponse {
-    private List<Cartridge> cartridges;
+    private List<CartridgePlus> cartridges;
 
     private Boolean hasNext;
 }

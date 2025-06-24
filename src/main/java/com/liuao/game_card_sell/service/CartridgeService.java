@@ -1,6 +1,7 @@
 package com.liuao.game_card_sell.service;
 
 import com.liuao.game_card_sell.dto.CartridgeRequest;
+import com.liuao.game_card_sell.dto.response.CartridgePlus;
 import com.liuao.game_card_sell.dto.response.CartridgeResponse;
 import com.liuao.game_card_sell.entity.*;
 import com.liuao.game_card_sell.exception.BusinessException;
@@ -41,11 +42,14 @@ public class CartridgeService {
         if (!ALLOWED_SORT_FIELDS.contains(request.getSortField())) {
             request.setSortField("id"); // 默认字段
         }
-        List<Cartridge> cartridges = cartridgeMapper.selectCartridges(
+        List<CartridgePlus> cartridges = cartridgeMapper.selectCartridges(
                 request.getSearchText(),
                 request.getCartridgePlatformNames(),
                 request.getCartridgeCategoryNames(),
                 request.getUserId(),
+                request.getIsFavorite(),
+                request.getIsPlayed(),
+                request.getIsWishList(),
                 request.getSortField(),
                 request.getSortDirection(),
                 request.getCursorId(),

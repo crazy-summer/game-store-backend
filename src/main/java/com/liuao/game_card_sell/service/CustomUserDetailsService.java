@@ -7,10 +7,13 @@ import com.liuao.game_card_sell.dto.PageRequest;
 import com.liuao.game_card_sell.entity.Role;
 import com.liuao.game_card_sell.entity.User;
 import com.liuao.game_card_sell.entity.UserRole;
+import com.liuao.game_card_sell.exception.BusinessException;
 import com.liuao.game_card_sell.mapper.RoleMapper;
 import com.liuao.game_card_sell.mapper.UserMapper;
 import com.liuao.game_card_sell.mapper.UserRoleMapper;
+import com.liuao.game_card_sell.mapper.UserRoleRelationMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserMapper userMapper;
@@ -33,6 +37,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final RoleMapper roleMapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final UserRoleRelationMapper userRoleRelationMapper;
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -101,8 +107,20 @@ public class CustomUserDetailsService implements UserDetailsService {
         return null;
     }
 
+    @Transactional
     public int updateUser(User user) {
-        return 0;
+        try{
+            userMapper.updateUser(user);
+            userRoleRelationMapper.deleteByUserId(user.getId());
+            List<UserRole> userRoles = user.getRoles().stream()
+                    .map(role -> UserRole.builder().userId(user.getId()).roleId(role.getId()).build())
+                    .toList();
+            userRoleRelationMapper.addRelation(userRoles);
+            return 1;
+        }catch (Exception e){
+            log.error("[更新用户失败]", e);
+            throw new BusinessException("400", "更新用户失败");
+        }
     }
 
     public int deleteUser(Long id) {

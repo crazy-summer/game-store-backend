@@ -13,4 +13,7 @@
             #{roleId}
         </foreach>
     </select>
+    <select id="selectRoles" resultType="com.liuao.game_card_sell.entity.Role">
+        select * from role
+    </select>
 </mapper>

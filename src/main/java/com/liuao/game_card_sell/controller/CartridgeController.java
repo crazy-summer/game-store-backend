@@ -1,12 +1,11 @@
 package com.liuao.game_card_sell.controller;
+import com.liuao.game_card_sell.entity.*;
+import org.springframework.web.bind.annotation.RequestParam;
+import io.swagger.v3.oas.annotations.Operation;
 
 import com.liuao.game_card_sell.dto.ApiResponse;
 import com.liuao.game_card_sell.dto.CartridgeRequest;
 import com.liuao.game_card_sell.dto.response.CartridgeResponse;
-import com.liuao.game_card_sell.entity.Cartridge;
-import com.liuao.game_card_sell.entity.CartridgeCategory;
-import com.liuao.game_card_sell.entity.CartridgePlatform;
-import com.liuao.game_card_sell.entity.UpdateCartridgeRequest;
 import com.liuao.game_card_sell.service.CartridgeService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
@@ -29,7 +28,7 @@ public class CartridgeController {
 
     @Operation(summary = "查询卡带列表") // 标注接口功能描述
     @PostMapping("/list")
-    public ResponseEntity<ApiResponse<CartridgeResponse>> getCartridges(@RequestBody CartridgeRequest request){
+    public ResponseEntity<ApiResponse<CartridgeResponse>> getCartridges(@RequestBody CartridgeRequest request) {
         CartridgeResponse response = cartridgeService.selectCartridges(request);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
