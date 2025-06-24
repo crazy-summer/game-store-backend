@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuao.game_card_sell.mapper.CartItemMapper">
+    <insert id="insertCartItem">
+        insert into cart_item (cart_id, cartridge_id, quantity, create_time, update_time)
+        values(#{cartId},#{cartridgeId}, #{quantity}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        ON DUPLICATE KEY UPDATE
+            quantity = #{quantity},
+            update_time = CURRENT_TIMESTAMP
+    </insert>
+</mapper>
