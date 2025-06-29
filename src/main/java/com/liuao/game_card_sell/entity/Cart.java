@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class Cart {
-    private Long cartId;
+    private Long id;
 
     private Long userId;
 

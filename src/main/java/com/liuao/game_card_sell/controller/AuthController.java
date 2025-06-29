@@ -65,7 +65,7 @@ public class AuthController {
 
         // 生成 JWT
         final User userDetails = customUserDetailsService.loadUserByUsername(request.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails);
+        final String jwt = jwtUtil.generateToken(userDetails, userDetails.getId());
 
         // 生成用户信息
         UserDto user = UserDto.fromUserDetails(userDetails);

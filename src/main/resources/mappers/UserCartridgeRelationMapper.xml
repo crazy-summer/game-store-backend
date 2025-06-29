@@ -5,13 +5,13 @@
 <mapper namespace="com.liuao.game_card_sell.mapper.UserCartridgeRelationMapper">
     <insert id="upsert" parameterType="com.liuao.game_card_sell.entity.UserCartridgeRelation">
         INSERT INTO user_cartridge_relation (
-            user_id, cartridge_id, is_favorite, is_wishlist, is_played, create_time, update_time
+            user_id, cartridge_id, is_favorite, is_wish_list, is_played, create_time, update_time
         ) VALUES (
             #{request.userId}, #{request.cartridgeId}, #{request.isFavorite}, #{request.isWishlist}, #{request.isPlayed}, NOW(), NOW()
         )
         ON DUPLICATE KEY UPDATE
             is_favorite = VALUES(is_favorite),
-            is_wishlist = VALUES(is_wishlist),
+            is_wish_list = VALUES(is_wish_list),
             is_played = VALUES(is_played),
             update_time = NOW()
     </insert>

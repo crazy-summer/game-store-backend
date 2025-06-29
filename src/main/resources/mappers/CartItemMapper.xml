@@ -8,4 +8,55 @@
             quantity = #{quantity},
             update_time = CURRENT_TIMESTAMP
     </insert>
+
+    <update id="updateCartItem">
+        update
+            cart_item ci left join cart c on ci.cart_id = c.id
+        set
+            quantity = #{request.quantity}
+        where ci.id = #{id} and ci.cartridge_id = #{request.cartridgeId} and c.user_id = #{request.userId}
+    </update>
+
+    <delete id="deleteCartItem">
+        delete from cart_item where id = #{id}
+    </delete>
+
+    <select id="selectPageCount" resultType="java.lang.Integer">
+        select
+            count(*)
+        from cart_item left join cart on cart.id = cart_item.cart_id
+        where cart.user_id = #{userId}
+    </select>
+    <select id="selectCartItemPage" resultType="com.liuao.game_card_sell.dto.response.CartItemExt">
+        select
+            ci.id,
+            ci.cart_id,
+            ci.cartridge_id,
+            ci.quantity,
+            ci.create_time,
+            ci.update_time,
+            ctg.title,
+            ctg.cover_image_url,
+            ctg.price
+        from cart_item ci
+            left join cart c on c.id = ci.cart_id
+            left join cartridge ctg on ctg.id = ci.cartridge_id
+        where c.user_id = #{userId}
+        limit #{offset}, #{pageSize}
+    </select>
+    <select id="selectCartItemById" resultType="com.liuao.game_card_sell.dto.response.CartItemExt">
+        select
+            ci.id,
+            ci.cart_id,
+            ci.cartridge_id,
+            ci.quantity,
+            ci.create_time,
+            ci.update_time,
+            ctg.title,
+            ctg.cover_image_url,
+            ctg.price
+        from cart_item ci
+                 left join cartridge ctg on ctg.id = ci.cartridge_id
+        where ci.id = #{id}
+    </select>
 </mapper>
