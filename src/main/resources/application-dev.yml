@@ -1,14 +1,33 @@
+# 跨域配置
 cors:
-  allowed-origins: "http://localhost:5173"  # 开发环境前端域名
+  allowed-origins: "http://localhost:5173"
 
+# 开发环境组件配置
+spring:
+  # 数据库连接
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.1.100:3306/game_card_sell?useSSL=false&serverTimezone=UTC
+    username: game_user
+    password: GameSell@2025
+    type: com.zaxxer.hikari.HikariDataSource
+
+  # RabbitMQ 连接
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# 日志配置
 logging:
   level:
-    # 设置你的Mapper接口包路径为DEBUG
+    # 业务 Mapper 调试
     com.liuao.game_card_sell.mapper: DEBUG
-
-    # 关键：启用MyBatis的SQL日志
-    org.mybatis.spring.SqlSessionUtils: INFO
-    org.mybatis.spring.transaction.SpringManagedTransaction: INFO
+    # MyBatis 框架及 SQL 打印
     org.apache.ibatis: DEBUG
     java.sql.Connection: DEBUG
     java.sql.PreparedStatement: DEBUG
+    # 框架运行信息
+    org.mybatis.spring.SqlSessionUtils: INFO
+    org.mybatis.spring.transaction.SpringManagedTransaction: INFO

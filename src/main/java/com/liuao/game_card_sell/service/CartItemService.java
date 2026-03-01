@@ -33,7 +33,9 @@ public class CartItemService {
     @Transactional
     public CartItem addCartItem(CartItemRequest request){
         try{
+            // 验证操作用户是否当前登录用户
             validateCurrentUser(request.getUserId());
+
             Cart cart = cartMapper.selectCartByUserId(request.getUserId());
             if (cart == null){
                 cart = new Cart();

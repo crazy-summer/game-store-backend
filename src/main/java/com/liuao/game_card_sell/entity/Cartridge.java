@@ -23,6 +23,8 @@ public class Cartridge {
 
     private Double price;
 
+    private int stock;
+
     private LocalDateTime releaseDate;
 
     private LocalDateTime createTime;

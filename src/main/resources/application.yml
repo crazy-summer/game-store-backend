@@ -1,22 +1,21 @@
+# 项目基础配置
 spring:
   application:
     name: game-card-sell
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.100:3306/game_card_sell?useSSL=false&serverTimezone=UTC
-    username: game_user
-    password: GameSell@2025
-    type: com.zaxxer.hikari.HikariDataSource
 
-# 原 mybatis.xxx 改为 mybatis-plus.xxx
-mybatis:
+  # 默认激活开发环境配置
+  profiles:
+    active: dev
+
+# MyBatis / MyBatis-Plus 配置
+mybatis-plus:
   mapper-locations: classpath:mappers/**Mapper.xml
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
     map-underscore-to-camel-case: true
-  # 添加实体类扫描路径
   type-aliases-package: com.liuao.game_card_sell.entity
 
+# 自定义文件上传路径
 file:
   upload-dir: uploads/
   access-path: /images/**
