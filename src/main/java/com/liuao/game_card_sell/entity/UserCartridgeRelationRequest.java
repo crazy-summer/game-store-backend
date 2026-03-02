@@ -1,5 +1,7 @@
 package com.liuao.game_card_sell.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -19,6 +21,7 @@ public class UserCartridgeRelationRequest {
 
     private Boolean isPlayed;
 
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;

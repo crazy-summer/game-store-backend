@@ -1,8 +1,12 @@
 // User.java
 package com.liuao.game_card_sell.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import jakarta.validation.constraints.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,29 +37,33 @@ public class User implements UserDetails {
     /**
      * 手机号（可为null，但格式必须正确）
      */
-    @Pattern(
-            regexp = "^1[3-9]\\d{9}$",  // 不允许空字符串，只允许符合格式的非空值
-            message = "手机号格式不正确"
-    )
-    @Null(message = "手机号必须为null")  // 仅允许为null，否则报错
+    @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
     private String phone;
 
     @Range(min = 0, max = 1, message = "状态只能为0或1")
     private Integer enabledStatus;
 
     @NotEmpty
+    @TableField(exist = false)
     private List<Role> roles;
 
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
 
     // 安全接口相关字段（使用 transient 避免序列化）
     private transient Collection<? extends GrantedAuthority> authorities;
 
+    @TableField(exist = false)
+    @Getter(AccessLevel.NONE)
     private Boolean accountNonExpired;
 
+    @TableField(exist = false)
+    @Getter(AccessLevel.NONE)
     private Boolean accountNonLocked;
 
+    @TableField(exist = false)
+    @Getter(AccessLevel.NONE)
     private Boolean credentialsNonExpired;
 
     @Override

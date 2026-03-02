@@ -1,7 +1,10 @@
 package com.liuao.game_card_sell.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,8 +14,10 @@ public class Cartridge {
 
     private String title;
 
+    @TableField(exist = false)
     private List<CartridgeCategory> cartridgeCategories;
 
+    @TableField(exist = false)
     private List<CartridgePlatform> cartridgePlatforms;
 
     private Integer score;
@@ -21,11 +26,12 @@ public class Cartridge {
 
     private String coverImageUrl;
 
-    private Double price;
+    private BigDecimal price;
 
     private int stock;
 
     private LocalDateTime releaseDate;
 
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 }

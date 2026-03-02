@@ -51,7 +51,7 @@
     </select>
 
     <resultMap id="UserWithRolesResultMap" type="com.liuao.game_card_sell.entity.User">
-        <id property="id" column="id"/>
+        <id property="id" column="u.id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>
         <result property="email" column="email"/>

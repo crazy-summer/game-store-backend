@@ -1,5 +1,6 @@
 // UserMapper.java
 package com.liuao.game_card_sell.mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.liuao.game_card_sell.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User> {
     /**
      * 插入用户并返回自增主键
      * @param user 用户实体

@@ -19,3 +19,11 @@ mybatis-plus:
 file:
   upload-dir: uploads/
   access-path: /images/**
+
+jwt:
+  # 优先读取环境变量 JWT_SECRET_KEY，如果没读到则使用默认值（仅用于本地开发，生产环境务必通过环境变量传入）
+  secret-key: ${JWT_SECRET_KEY:dev_secret_key_change_me_in_prod}
+  # 过期时间（毫秒），这里保持你原来的 10 小时
+  expiration-ms: 36000000
+  # 用户ID的 claim 键名，方便以后修改
+  user-id-claim: userId

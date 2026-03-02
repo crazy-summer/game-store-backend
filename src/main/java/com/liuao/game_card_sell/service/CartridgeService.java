@@ -1,5 +1,6 @@
 package com.liuao.game_card_sell.service;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.liuao.game_card_sell.dto.CartridgeRequest;
 import com.liuao.game_card_sell.dto.response.CartridgePlus;
 import com.liuao.game_card_sell.dto.response.CartridgeResponse;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CartridgeService {
+public class CartridgeService extends ServiceImpl<CartridgeMapper, Cartridge> {
     @Resource
     private CartridgeMapper cartridgeMapper;
 
@@ -89,6 +90,14 @@ public class CartridgeService {
     public Cartridge selectCartridgeById(Long id) {
         try{
             Cartridge cartridge = cartridgeMapper.selectCartridgeById(id);
+            // --- 新增防御性编程 ---
+            if (cartridge == null) {
+                // 在高并发秒杀场景下，可能是数据库主从延迟或事务未提交导致的短暂不可见
+                // 这里抛出异常，依靠 MQ 的重试机制来处理，而不是直接崩掉线程
+                log.warn("暂时未查询到商品数据，ID: {}，可能由于并发延迟，将触发重试", id);
+                throw new RuntimeException("商品数据暂时不可用，请稍后重试");
+                // 或者抛出特定的业务异常，确保能被 MQ 重试拦截器捕获
+            }
             List<CartridgePlatformRelation> cartridgePlatformRelations = cartridgePlatformRelationMapper.selectRelationByCartridgeId(cartridge.getId());
             List<CartridgeCategoryRelation> cartridgeCategoryRelations = cartridgeCategoryRelationMapper.selectRelationByCartridgeId(cartridge.getId());
             List<Long> platformIds = cartridgePlatformRelations.stream()

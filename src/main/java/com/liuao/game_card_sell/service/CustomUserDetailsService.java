@@ -1,6 +1,7 @@
 package com.liuao.game_card_sell.service;
 
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.liuao.game_card_sell.common.Page;
 import com.liuao.game_card_sell.dto.PageInfo;
 import com.liuao.game_card_sell.dto.PageRequest;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService extends ServiceImpl<UserMapper, User> implements UserDetailsService {
     private final UserMapper userMapper;
 
     private final UserRoleMapper userRoleMapper;

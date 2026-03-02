@@ -132,6 +132,10 @@
         select * from cartridge where id = #{id}
     </select>
 
+    <select id="selectPriceById" resultType="java.math.BigDecimal">
+        select price from cartridge where id = #{id}
+    </select>
+
     <update id="updateCartridgeById">
         update cartridge set
             cover_image_url = #{request.coverImageUrl},

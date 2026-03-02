@@ -71,7 +71,7 @@ public class CustomUserDetailsServiceTest {
         // 验证结果
         assertNotNull(registeredUser.getId());
         assertEquals("encryptedPassword", registeredUser.getPassword());
-        assertTrue(registeredUser.getEnabled() == 1);
+        assertTrue(registeredUser.getEnabledStatus() == 1);
 
         // 验证数据库操作
         verify(userMapper, times(1)).checkUsernameExists("testuser");
@@ -79,7 +79,7 @@ public class CustomUserDetailsServiceTest {
         verify(userMapper, times(1)).insertUser(argThat(user ->
                 user.getUsername().equals("testuser") &&
                         user.getPassword().equals("encryptedPassword") &&
-                        user.getEnabled() == 1
+                        user.getEnabledStatus() == 1
         ));
         verify(userRoleMapper, times(1)).insertUserRole(argThat(role ->
                 role.getUserId() == 1L &&

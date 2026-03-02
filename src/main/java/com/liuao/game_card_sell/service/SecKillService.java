@@ -34,7 +34,6 @@ public class SecKillService {
 
     public void seckill(SecKillRequest request) {
         long userId = request.getUserId();
-        long cartId = request.getCartId();
         long cartridgeId = request.getCartridgeId();
         // redis预扣减库存,使用lua脚本
         String stockKey = "stock:" + cartridgeId;
