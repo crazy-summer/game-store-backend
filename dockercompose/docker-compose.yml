@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # MySQL 服务
+  mysql:
+    image: mysql:8.0
+    container_name: miaosha-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: miaosha
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Redis 服务
+  redis:
+    image: redis:7.0
+    container_name: miaosha-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+    # 如果需要密码，取消下面 command 的注释并修改 yourpassword
+    # command: redis-server --requirepass yourpassword
+
+  # RabbitMQ 服务 (带管理界面)
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: miaosha-mq
+    restart: always
+    ports:
+      - "5672:5672"   # 消息队列端口
+      - "15672:15672" # 管理后台端口 (默认账号密码 guest/guest)
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
